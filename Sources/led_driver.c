@@ -1,6 +1,38 @@
 #include "led_driver.h"
 
 int digit_mask(int digit);
+int led_segments(int value, int* segments);
+int write_digit(int value, int digit);
+int write_float(float value);
+
+float current_value = 000.0;
+
+int current_digit = 0;
+
+int digits[4] = {0,0,0,0};
+
+int LED_display(){
+	write_digit(digits[0], 0);
+	write_digit(digits[1], 1);
+	write_digit(digits[2], 2);
+	write_digit(digits[3], 3);
+
+	return 0;
+}
+
+void LED_set_value(float new_value){
+	int base_int = (int)(current_value * 10);
+	current_value = new_value;
+
+	digits[0] = base_int % 10;
+	digits[1] = (base_int / 10) % 10;
+	digits[2] = (base_int / 100) % 10;
+	digits[3] = (base_int / 1000) % 10;
+}
+
+float LED_get_value(void){
+	return current_value;
+}
 
 int write_float(float value){
 	int base_int = (int)(value * 10);
@@ -8,12 +40,12 @@ int write_float(float value){
 	int digit_1 = (base_int / 10) % 10;
 	int digit_2 = (base_int / 100) % 10;
 	int digit_3 = (base_int / 1000) % 10;
-	
+
 	write_digit(decimal, 0);
 	write_digit(digit_1, 1);
 	write_digit(digit_2, 2);
 	write_digit(digit_3, 3);
-	
+
 	return 0;
 }
 
@@ -21,21 +53,21 @@ int write_digit(int value, int digit){
 	int segments[7];
 	int valid = 0;
 	int cathode;
-	
+
 	if(digit == 0) cathode = cathode4;
 	else if(digit == 1) cathode = cathode3;
 	else if(digit == 2) cathode = cathode2;
 	else if(digit == 3) cathode = cathode1;
 	else return -1;
-	
+
 	HAL_GPIO_WritePin(LED_PORT, cathode, GPIO_PIN_SET);
-	
+
 	if(digit == 1) HAL_GPIO_WritePin(LED_PORT, pinDP, GPIO_PIN_SET);
-	
+
 	valid = led_segments(value, segments);
-	
+
 	printf("%i", segments[0]);
-	
+
 	if (segments[0]) HAL_GPIO_WritePin(LED_PORT, pinA, GPIO_PIN_SET);
 	else HAL_GPIO_WritePin(LED_PORT, pinA, GPIO_PIN_RESET);
 
@@ -57,7 +89,7 @@ int write_digit(int value, int digit){
 	if (segments[6]) HAL_GPIO_WritePin(LED_PORT, pinG, GPIO_PIN_SET);
 	else HAL_GPIO_WritePin(LED_PORT, pinG, GPIO_PIN_RESET);
 
-	HAL_Delay(5);
+	HAL_Delay(1);
 	HAL_GPIO_WritePin(LED_PORT, cathode, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(LED_PORT, pinDP, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(LED_PORT, pinA|pinB|pinC|pinD|pinE|pinF|pinG, GPIO_PIN_RESET);

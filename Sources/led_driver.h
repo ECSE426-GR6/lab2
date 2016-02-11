@@ -1,5 +1,7 @@
 #include "stm32f4xx_hal.h"
 
+#define DIGIT_SWITCH_DELAY 1
+
 #define LED_PORT GPIOE
 
 #define pinA GPIO_PIN_0
@@ -36,6 +38,6 @@
 #define dig8 0x7f
 #define dig9 0x67
 
-int write_float(float value);
-int led_segments(int value, int* segments);
-int write_digit(int value, int digit);
+int LED_display(void);
+void LED_set_value(float);
+float LED_get_value(void);

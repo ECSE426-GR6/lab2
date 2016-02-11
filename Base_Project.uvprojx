@@ -437,6 +437,11 @@
               <FileType>1</FileType>
               <FilePath>.\Sources\stm32f4xx_it.c</FilePath>
             </File>
+            <File>
+              <FileName>led_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Sources\led_driver.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

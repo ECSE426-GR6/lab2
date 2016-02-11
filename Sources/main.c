@@ -3,6 +3,7 @@
 
 /* USER CODE BEGIN Includes */
 #include "led_driver.h"
+#include "constants.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -45,6 +46,11 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
 
+	tick_counts.display = 0;
+	tick_counts.temp = 0;
+	tick_counts.alarm = 0;
+	tick_counts.test = 0;
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -52,30 +58,16 @@ int main(void)
   while (1)
   {
   /* USER CODE END WHILE */
+
+		if (HAL_GetTick() - tick_counts.display > DISPLAY_REFRESH_DELAY) {
+			LED_display();
+			tick_counts.display = HAL_GetTick();
+		}
 		
-		write_float(696.9);
-		
-//		write_digit(0, 0);
-//		HAL_Delay(500);
-//		write_digit(1, 0);
-//		HAL_Delay(500);
-//		write_digit(2, 0);
-//		HAL_Delay(500);
-//		write_digit(3, 0);
-//		HAL_Delay(500);
-//		write_digit(4, 0);
-//		HAL_Delay(500);
-//		write_digit(5, 0);
-//		HAL_Delay(500);
-//		write_digit(6, 0);
-//		HAL_Delay(500);
-//		write_digit(7, 0);
-//		HAL_Delay(500);
-//		write_digit(8, 0);
-//		HAL_Delay(500);
-//		write_digit(9, 0);
-//		HAL_Delay(500);
-		
+		if (HAL_GetTick() - tick_counts.temp > TEMP_POLL_DELAY) {
+			LED_set_value(LED_get_value() + 0.1f);
+			tick_counts.temp = HAL_GetTick();
+		}
 		
 //      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14,GPIO_PIN_SET);
 //	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13,GPIO_PIN_RESET);
