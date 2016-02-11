@@ -2,7 +2,7 @@
 #include "stm32f4xx_hal.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "led_driver.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -52,18 +52,43 @@ int main(void)
   while (1)
   {
   /* USER CODE END WHILE */
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14,GPIO_PIN_SET);
-	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13,GPIO_PIN_RESET);
-      HAL_Delay(200);
-	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15,GPIO_PIN_SET);
-	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14,GPIO_PIN_RESET);
-      HAL_Delay(200);
-	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12,GPIO_PIN_SET);
-	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15,GPIO_PIN_RESET);
-      HAL_Delay(200);
-	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13,GPIO_PIN_SET);
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12,GPIO_PIN_RESET);
-      HAL_Delay(200);
+		
+		write_float(696.9);
+		
+//		write_digit(0, 0);
+//		HAL_Delay(500);
+//		write_digit(1, 0);
+//		HAL_Delay(500);
+//		write_digit(2, 0);
+//		HAL_Delay(500);
+//		write_digit(3, 0);
+//		HAL_Delay(500);
+//		write_digit(4, 0);
+//		HAL_Delay(500);
+//		write_digit(5, 0);
+//		HAL_Delay(500);
+//		write_digit(6, 0);
+//		HAL_Delay(500);
+//		write_digit(7, 0);
+//		HAL_Delay(500);
+//		write_digit(8, 0);
+//		HAL_Delay(500);
+//		write_digit(9, 0);
+//		HAL_Delay(500);
+		
+		
+//      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14,GPIO_PIN_SET);
+//	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13,GPIO_PIN_RESET);
+//      HAL_Delay(200);
+//	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12,GPIO_PIN_SET);
+//	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14,GPIO_PIN_RESET);
+//      HAL_Delay(200);
+//	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15,GPIO_PIN_SET);
+//	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12,GPIO_PIN_RESET);
+//      HAL_Delay(200);
+//	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13,GPIO_PIN_SET);
+//      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15,GPIO_PIN_RESET);
+//      HAL_Delay(200);
 
   /* USER CODE BEGIN 3 */
 
@@ -247,8 +272,8 @@ void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PE1 */
-  GPIO_InitStruct.Pin = GPIO_PIN_1;
-  GPIO_InitStruct.Mode = GPIO_MODE_EVT_RISING;
+  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
