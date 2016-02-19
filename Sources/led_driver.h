@@ -38,6 +38,9 @@
 #define dig8 0x7f
 #define dig9 0x67
 
+void ALARM_switch(void);
+void ALARM_off(void);
+
 int LED_display(void);
 void LED_set_value(float);
 float LED_get_value(void);

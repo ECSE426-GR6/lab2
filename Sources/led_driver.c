@@ -1,3 +1,7 @@
+/**
+ * Functions to control and display the led 4 digit 7 segment display as well as the 4 led alarm
+ */
+
 #include "led_driver.h"
 
 int digit_mask(int digit);
@@ -5,12 +9,48 @@ int led_segments(int value, int* segments);
 int write_digit(int value, int digit);
 int write_float(float value);
 
+//Clock display variables
 float current_value = 000.0;
-
 int current_digit = 0;
-
 int digits[4] = {0,0,0,0};
 
+//alarm variables
+int alarm_on = 0;
+int led_pins[4] = {GPIO_PIN_14, GPIO_PIN_15, GPIO_PIN_12, GPIO_PIN_13};
+int current_led = 0;
+
+///ALARM FUNCTIONS
+
+/**
+ * Sets the current ON led to OFF and sets the next led to ON on a clockwise manner
+ * Use to turn ON alarm as well
+ */
+void ALARM_switch(void){
+	int next = (current_led + 1) % 4;
+	alarm_on = 1;
+
+	HAL_GPIO_WritePin(GPIOD, led_pins[next], GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOD, led_pins[current_led], GPIO_PIN_RESET);
+
+	current_led = next;
+}
+
+/**
+ * Disable the alarm (all LEDs off)
+ */
+void ALARM_off(void){
+	if (alarm_on) {
+		HAL_GPIO_WritePin(GPIOD, led_pins[current_led], GPIO_PIN_RESET);
+		current_led = 0;
+		alarm_on = 0;
+	}
+}
+
+//CLOCK DISPLAY FUNCTIONS
+/**
+ * Displays the current temp value on the 4digit display
+ * @return 0 if no errors
+ */
 int LED_display(){
 	write_digit(digits[0], 0);
 	write_digit(digits[1], 1);
@@ -20,6 +60,10 @@ int LED_display(){
 	return 0;
 }
 
+/**
+ * Set the private temp value to be displayed on next refresh
+ * @param new_value new value to set temp to
+ */
 void LED_set_value(float new_value){
 	int base_int = (int)(current_value * 10);
 	current_value = new_value;
@@ -30,10 +74,19 @@ void LED_set_value(float new_value){
 	digits[3] = (base_int / 1000) % 10;
 }
 
+/**
+ * Get current private temp value
+ * @return  current temp
+ */
 float LED_get_value(void){
 	return current_value;
 }
 
+/**
+ * Writes a float value to the display
+ * @param  value float value to display
+ * @return       error code (0 if no errors)
+ */
 int write_float(float value){
 	int base_int = (int)(value * 10);
 	int decimal = base_int % 10;
@@ -49,6 +102,12 @@ int write_float(float value){
 	return 0;
 }
 
+/**
+ * Writes one digit to one of the 4 7 segment digits
+ * @param  value values to display
+ * @param  digit which digit to display it on (0 is right most)
+ * @return       error code (0 if no errors)
+ */
 int write_digit(int value, int digit){
 	int segments[7];
 	int valid = 0;
@@ -65,8 +124,6 @@ int write_digit(int value, int digit){
 	if(digit == 1) HAL_GPIO_WritePin(LED_PORT, pinDP, GPIO_PIN_SET);
 
 	valid = led_segments(value, segments);
-
-	printf("%i", segments[0]);
 
 	if (segments[0]) HAL_GPIO_WritePin(LED_PORT, pinA, GPIO_PIN_SET);
 	else HAL_GPIO_WritePin(LED_PORT, pinA, GPIO_PIN_RESET);
@@ -97,6 +154,12 @@ int write_digit(int value, int digit){
 	return valid;
 }
 
+/**
+ * Returns an array of the segments to switch on ([0] is A, [6] is G)
+ * @param  value    int value to convert
+ * @param  segments array to store result in
+ * @return          error code (0 if no errors)
+ */
 int led_segments(int value, int* segments){
 	int mask = digit_mask(value);
 	segments[0] = mask & segA;
